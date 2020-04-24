@@ -22,7 +22,7 @@ class CountryFragment : Fragment() {
         countryViewModel =
                 ViewModelProviders.of(this).get(CountryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_country, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
+        val textView: TextView = root.findViewById(R.id.text_country)
         countryViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
