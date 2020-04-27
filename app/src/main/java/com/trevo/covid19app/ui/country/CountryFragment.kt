@@ -4,13 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.trevo.covid19app.R
-import com.trevo.covid19app.service.DialogService
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -18,9 +16,6 @@ class CountryFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var dialogService: DialogService
 
     private val countryViewModel: CountryViewModel by viewModels { viewModelFactory }
 
@@ -41,6 +36,9 @@ class CountryFragment : Fragment() {
         countryViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        countryViewModel.setupSelectCountryDialog(context)
+
         return root
     }
 
@@ -50,11 +48,7 @@ class CountryFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.expand_more)
-            showSelectCountryDialog()
+            countryViewModel.showSelectCountryDialog()
         return super.onOptionsItemSelected(item)
-    }
-
-    fun showSelectCountryDialog() {
-        dialogService.showSelectCountryDialog()
     }
 }

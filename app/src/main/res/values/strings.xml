@@ -8,5 +8,6 @@
 
     <!--Select Country-->
     <string name="select_country">Select Country</string>
+    <string name="select">Select</string>
     <string name="cancel">Cancel</string>
 </resources>
