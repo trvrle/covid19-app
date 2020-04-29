@@ -9,9 +9,12 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.trevo.covid19app.R
 import com.trevo.covid19app.service.DialogService
+import com.trevo.covid19app.service.PreferenceService
 import javax.inject.Inject
 
-class CountryViewModel @Inject constructor(): ViewModel() {
+class CountryViewModel @Inject constructor(
+    private val preferenceService: PreferenceService
+): ViewModel() {
 
     private lateinit var dialogService: DialogService
 
@@ -20,6 +23,11 @@ class CountryViewModel @Inject constructor(): ViewModel() {
     }
 
     val text: LiveData<String> = _text
+
+    fun load(bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
+        val title = preferenceService.getPref("Country")!!
+        setTitle(title, bottomNavigationView, actionBar)
+    }
 
     fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder, countries: List<String>,
                                  bottomNavigationView: BottomNavigationView,
@@ -41,7 +49,12 @@ class CountryViewModel @Inject constructor(): ViewModel() {
                              bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
         val countryName = countries[selectedCountry]
         _text.value = countryName
-        bottomNavigationView.menu.findItem(R.id.navigation_country).title = countryName
-        actionBar.title = countryName
+        setTitle(countryName, bottomNavigationView, actionBar)
+        preferenceService.savePreference("Country", countryName)
+    }
+
+    private fun setTitle(title: String, bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
+        bottomNavigationView.menu.findItem(R.id.navigation_country).title = title
+        actionBar.title = title
     }
 }

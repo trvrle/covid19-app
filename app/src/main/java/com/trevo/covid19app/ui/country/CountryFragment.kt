@@ -35,16 +35,18 @@ class CountryFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_country, container, false)
+        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
+        val actionBar = (activity as AppCompatActivity).supportActionBar!!
+        val countries = resources.getStringArray(R.array.countries).toList()
+        val dialogBuilder = AlertDialog.Builder(context)
+        countryViewModel.load(bottomNavigationView, actionBar)
+
+        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries, bottomNavigationView, actionBar)
 
         val textView: TextView = root.findViewById(R.id.text_country)
         countryViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
-        val actionBar = (activity as AppCompatActivity).supportActionBar!!
-        val countries = resources.getStringArray(R.array.countries).toList()
-        val dialogBuilder = AlertDialog.Builder(context)
-        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries, bottomNavigationView, actionBar)
 
         return root
     }
