@@ -1,33 +1,26 @@
 package com.trevo.covid19app.service
 
-import android.content.Context
 import android.app.AlertDialog
+import android.content.DialogInterface
 import com.trevo.covid19app.R
 
-class DialogService(private val context: Context?) {
+class DialogService() {
 
-    private var selectedItem = -1
-    private var dialog: AlertDialog.Builder? = AlertDialog.Builder(context)
+    var selectedItem = -1
+    private var dialog: AlertDialog.Builder? = null
 
-    fun setupSelectCountryDialog() {
-        dialog = AlertDialog.Builder(context)
+    fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder,
+                                 listener: DialogInterface.OnClickListener) {
+        dialog = dialogBuilder
             .setTitle(R.string.select_country)
             .setSingleChoiceItems(R.array.countries, -1) { _, which ->
                 selectedItem = which
             }
-            .setPositiveButton(R.string.select) { _, _ ->
-                userPressedSelect(selectedItem)
-            }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                // Do nothing
-            }
+            .setPositiveButton(R.string.select, listener)
+            .setNegativeButton(R.string.cancel, null)
     }
 
     fun show() {
         dialog?.show()
-    }
-
-    private fun userPressedSelect(selectedItem: Int) {
-
     }
 }
