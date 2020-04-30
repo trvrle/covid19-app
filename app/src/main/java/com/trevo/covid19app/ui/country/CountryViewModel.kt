@@ -13,10 +13,9 @@ import com.trevo.covid19app.service.PreferenceService
 import javax.inject.Inject
 
 class CountryViewModel @Inject constructor(
-    private val preferenceService: PreferenceService
+    private val preferenceService: PreferenceService,
+    private val dialogService: DialogService
 ): ViewModel() {
-
-    private lateinit var dialogService: DialogService
 
     private val _text = MutableLiveData<String>().apply {
         value = "Country Page"
@@ -25,14 +24,13 @@ class CountryViewModel @Inject constructor(
     val text: LiveData<String> = _text
 
     fun load(bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
-        val title = preferenceService.getPref("Country")!!
+        val title = preferenceService.getPref("Country", "Country")!!
         setTitle(title, bottomNavigationView, actionBar)
     }
 
     fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder, countries: List<String>,
                                  bottomNavigationView: BottomNavigationView,
                                  actionBar: ActionBar) {
-        dialogService = DialogService()
         dialogService.setupSelectCountryDialog(
             dialogBuilder,
             DialogInterface.OnClickListener { _, _ ->
@@ -45,16 +43,16 @@ class CountryViewModel @Inject constructor(
         dialogService.show()
     }
 
+    private fun setTitle(title: String, bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
+        bottomNavigationView.menu.findItem(R.id.navigation_country).title = title
+        actionBar.title = title
+    }
+
     private fun applyCountry(countries: List<String>, selectedCountry: Int,
                              bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
         val countryName = countries[selectedCountry]
         _text.value = countryName
         setTitle(countryName, bottomNavigationView, actionBar)
         preferenceService.savePreference("Country", countryName)
-    }
-
-    private fun setTitle(title: String, bottomNavigationView: BottomNavigationView, actionBar: ActionBar) {
-        bottomNavigationView.menu.findItem(R.id.navigation_country).title = title
-        actionBar.title = title
     }
 }

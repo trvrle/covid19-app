@@ -18,7 +18,7 @@ class WorldViewModel @Inject constructor(
     val text: LiveData<String> = _text
 
     fun load(bottomNavigationView: BottomNavigationView) {
-        val countryName = preferenceService.getPref("Country")
+        val countryName = preferenceService.getPref("Country", "Country")
         bottomNavigationView.menu.findItem(R.id.navigation_country).title = countryName
     }
 }
