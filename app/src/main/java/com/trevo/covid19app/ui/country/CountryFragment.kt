@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -36,12 +37,14 @@ class CountryFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_country, container, false)
         val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
+        val progressBar: ProgressBar = root.findViewById(R.id.progress_loader)
         val actionBar = (activity as AppCompatActivity).supportActionBar!!
         val countries = resources.getStringArray(R.array.countries).toList()
         val dialogBuilder = AlertDialog.Builder(context)
+
         countryViewModel.load(bottomNavigationView, actionBar)
 
-        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries, bottomNavigationView, actionBar)
+        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries, bottomNavigationView, actionBar, progressBar)
 
         val textView: TextView = root.findViewById(R.id.text_country)
         countryViewModel.text.observe(viewLifecycleOwner, Observer {
