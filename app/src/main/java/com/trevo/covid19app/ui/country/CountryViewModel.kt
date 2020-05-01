@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.trevo.covid19app.service.*
+import com.trevo.covid19app.ui.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -17,26 +18,14 @@ class CountryViewModel @Inject constructor(
     private val dialogService: DialogService,
     private val apiService: ApiService,
     private val dispatcherService: IDispatcherService
-): ViewModel() {
+): BaseViewModel() {
 
     private val scope = CoroutineScope(dispatcherService.main + SupervisorJob())
-
-    private val defaultCountryValue = "Country"
 
     private val _text = MutableLiveData<String>().apply {
         value = ""
     }
     val text: LiveData<String> = _text
-
-    private val _title = MutableLiveData<String>().apply {
-        value = defaultCountryValue
-    }
-    val title: LiveData<String> = _title
-
-    private val _loading = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-    val loading: LiveData<Boolean> = _loading
 
     fun load() {
         val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
@@ -76,13 +65,5 @@ class CountryViewModel @Inject constructor(
             setLoading(false)
             _text.value = "Confirmed cases for $countryName: $confirmedCases"
         }
-    }
-
-    private fun setTitle(title: String) {
-        _title.value = title
-    }
-
-    private fun setLoading(isLoading: Boolean) {
-        _loading.value = isLoading
     }
 }

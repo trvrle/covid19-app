@@ -38,9 +38,9 @@ class CountryFragment : Fragment() {
         countryViewModel.load()
         val root = inflater.inflate(R.layout.fragment_country, container, false)
         setupSelectCountryDialog()
-        setupProgressBar(root.findViewById(R.id.progress_loader))
+        setupProgressBar()
         setupTitle()
-        setupText(root.findViewById(R.id.text_country))
+        setupText(root)
         return root
     }
 
@@ -61,7 +61,8 @@ class CountryFragment : Fragment() {
         countryViewModel.setupSelectCountryDialog(dialogBuilder, countries)
     }
 
-    private fun setupProgressBar(progressBar: ProgressBar) {
+    private fun setupProgressBar() {
+        val progressBar: ProgressBar = requireActivity().findViewById(R.id.progress_loader)
         countryViewModel.loading.observe(viewLifecycleOwner, Observer {
             progressBar.visibility = if(it) View.VISIBLE else View.GONE
         })
@@ -76,7 +77,8 @@ class CountryFragment : Fragment() {
         })
     }
 
-    private fun setupText(textView: TextView) {
+    private fun setupText(root: View) {
+        val textView: TextView = root.findViewById(R.id.text_country)
         countryViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
