@@ -33,12 +33,22 @@ class WorldFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_world, container, false)
+        worldViewModel.load()
+        setupTitle()
+        setupText(root.findViewById(R.id.text_world))
+        return root
+    }
+
+    private fun setupTitle() {
         val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
-        worldViewModel.load(bottomNavigationView)
-        val textView: TextView = root.findViewById(R.id.text_world)
+        worldViewModel.title.observe(viewLifecycleOwner, Observer {
+            bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
+        })
+    }
+
+    private fun setupText(textView: TextView) {
         worldViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        return root
     }
 }

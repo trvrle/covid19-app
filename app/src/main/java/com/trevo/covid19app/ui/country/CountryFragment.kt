@@ -35,22 +35,12 @@ class CountryFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        countryViewModel.load()
         val root = inflater.inflate(R.layout.fragment_country, container, false)
-        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
-        val progressBar: ProgressBar = root.findViewById(R.id.progress_loader)
-        val actionBar = (activity as AppCompatActivity).supportActionBar!!
-        val countries = resources.getStringArray(R.array.countries).toList()
-        val dialogBuilder = AlertDialog.Builder(context)
-
-        countryViewModel.load(bottomNavigationView, actionBar)
-
-        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries, bottomNavigationView, actionBar, progressBar)
-
-        val textView: TextView = root.findViewById(R.id.text_country)
-        countryViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-
+        setupSelectCountryDialog()
+        setupProgressBar(root.findViewById(R.id.progress_loader))
+        setupTitle()
+        setupText(root.findViewById(R.id.text_country))
         return root
     }
 
@@ -62,5 +52,33 @@ class CountryFragment : Fragment() {
         if (item.itemId == R.id.expand_more)
             countryViewModel.showSelectCountryDialog()
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupSelectCountryDialog() {
+        val countries = resources.getStringArray(R.array.countries).toList()
+        val dialogBuilder = AlertDialog.Builder(context)
+
+        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries)
+    }
+
+    private fun setupProgressBar(progressBar: ProgressBar) {
+        countryViewModel.loading.observe(viewLifecycleOwner, Observer {
+            progressBar.visibility = if(it) View.VISIBLE else View.GONE
+        })
+    }
+
+    private fun setupTitle() {
+        val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
+        val actionBar = (activity as AppCompatActivity).supportActionBar!!
+        countryViewModel.title.observe(viewLifecycleOwner, Observer {
+            bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
+            actionBar.title = it
+        })
+    }
+
+    private fun setupText(textView: TextView) {
+        countryViewModel.text.observe(viewLifecycleOwner, Observer {
+            textView.text = it
+        })
     }
 }
