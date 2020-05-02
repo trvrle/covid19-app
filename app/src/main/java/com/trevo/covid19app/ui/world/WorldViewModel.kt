@@ -20,11 +20,6 @@ class WorldViewModel @Inject constructor(
 
     private val scope = CoroutineScope(dispatcherService.main + SupervisorJob())
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "World Page"
-    }
-    val text: LiveData<String> = _text
-
     fun load() {
         val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
         setTitle(countryName)
@@ -34,9 +29,9 @@ class WorldViewModel @Inject constructor(
     private fun displayCasesForWorld() {
         scope.launch {
             setLoading(true)
-            val summary = withContext(dispatcherService.background) {
-                apiService.getSummary()
-            }
+//            val summary = withContext(dispatcherService.background) {
+//                apiService.getSummary()
+//            }
             setLoading(false)
         }
     }

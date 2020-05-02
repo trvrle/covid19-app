@@ -37,7 +37,6 @@ class WorldFragment : Fragment() {
         worldViewModel.load()
         setupProgressBar()
         setupTitle()
-        setupText(root.findViewById(R.id.text_world))
         return root
     }
 
@@ -52,12 +51,6 @@ class WorldFragment : Fragment() {
         val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
         worldViewModel.title.observe(viewLifecycleOwner, Observer {
             bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
-        })
-    }
-
-    private fun setupText(textView: TextView) {
-        worldViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
         })
     }
 }
