@@ -10,7 +10,6 @@ import java.util.*
 class Transformer {
 
     fun summaryResponseToSummary(summaryResponse: SummaryResponse): Summary {
-        val s = NumberFormat.getNumberInstance(Locale.getDefault()).format(summaryResponse.Global.TotalConfirmed)
         return Summary (globalResponseToWorldwideSummary(summaryResponse.Global))
     }
 
