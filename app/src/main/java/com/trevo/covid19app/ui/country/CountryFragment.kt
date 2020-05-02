@@ -40,7 +40,6 @@ class CountryFragment : Fragment() {
         setupButton(root)
         setupProgressBar()
         setupTitle(root)
-        setupText(root)
         return root
     }
 
@@ -71,13 +70,6 @@ class CountryFragment : Fragment() {
         countryViewModel.title.observe(viewLifecycleOwner, Observer {
             bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
             selectCountryButton.text = it
-        })
-    }
-
-    private fun setupText(root: View) {
-        val textView: TextView = root.findViewById(R.id.text_country)
-        countryViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
         })
     }
 }

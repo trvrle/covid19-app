@@ -22,11 +22,6 @@ class CountryViewModel @Inject constructor(
 
     private val scope = CoroutineScope(dispatcherService.main + SupervisorJob())
 
-    private val _text = MutableLiveData<String>().apply {
-        value = ""
-    }
-    val text: LiveData<String> = _text
-
     fun load() {
         val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
         setTitle(countryName)
@@ -56,14 +51,12 @@ class CountryViewModel @Inject constructor(
 
     private fun displayCasesForCountry(countryName: String) {
         scope.launch {
-            _text.value = ""
             setLoading(true)
-            val countryCasesResponses = withContext(dispatcherService.background) {
-                apiService.getCountryTotal(countryName)
-            }
-            val confirmedCases = countryCasesResponses.last().Cases
+//            val countryCasesResponses = withContext(dispatcherService.background) {
+//                apiService.getCountryTotal(countryName)
+//            }
+//            val confirmedCases = countryCasesResponses.last().Cases
             setLoading(false)
-            _text.value = "Confirmed cases for $countryName: $confirmedCases"
         }
     }
 }
