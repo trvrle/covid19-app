@@ -4,9 +4,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -27,7 +27,6 @@ class CountryFragment : Fragment() {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -38,20 +37,11 @@ class CountryFragment : Fragment() {
         countryViewModel.load()
         val root = inflater.inflate(R.layout.fragment_country, container, false)
         setupSelectCountryDialog()
+        setupButton(root)
         setupProgressBar()
-        setupTitle()
+        setupTitle(root)
         setupText(root)
         return root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_select_country, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.expand_more)
-            countryViewModel.showSelectCountryDialog()
-        return super.onOptionsItemSelected(item)
     }
 
     private fun setupSelectCountryDialog() {
@@ -61,6 +51,13 @@ class CountryFragment : Fragment() {
         countryViewModel.setupSelectCountryDialog(dialogBuilder, countries)
     }
 
+    private fun setupButton(root: View) {
+        val selectCountryButton: Button = root.findViewById(R.id.button_select_country)
+        selectCountryButton.setOnClickListener {
+            countryViewModel.showSelectCountryDialog()
+        }
+    }
+
     private fun setupProgressBar() {
         val progressBar: ProgressBar = requireActivity().findViewById(R.id.progress_loader)
         countryViewModel.loading.observe(viewLifecycleOwner, Observer {
@@ -68,10 +65,12 @@ class CountryFragment : Fragment() {
         })
     }
 
-    private fun setupTitle() {
+    private fun setupTitle(root: View) {
         val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
+        val selectCountryButton: Button = root.findViewById(R.id.button_select_country)
         countryViewModel.title.observe(viewLifecycleOwner, Observer {
             bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
+            selectCountryButton.text = it
         })
     }
 
