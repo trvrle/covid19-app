@@ -11,9 +11,4 @@
         android:icon="@drawable/ic_country_black_24dp"
         android:title="@string/title_country" />
 
-    <item
-        android:id="@+id/navigation_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"
-        android:title="@string/title_refresh" />
-
 </menu>

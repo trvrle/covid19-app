@@ -33,9 +33,11 @@ class WorldViewModel @Inject constructor(
 
     private fun displayCasesForWorld() {
         scope.launch {
+            setLoading(true)
             val summary = withContext(dispatcherService.background) {
                 apiService.getSummary()
             }
+            setLoading(false)
         }
     }
 }

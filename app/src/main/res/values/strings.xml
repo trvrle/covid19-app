@@ -4,7 +4,6 @@
     <!--Bottom Navigation Bar-->
     <string name="title_world">World</string>
     <string name="title_country">Country</string>
-    <string name="title_refresh">Refresh</string>
 
     <!--Select Country-->
     <string name="select_country">Select Country</string>

@@ -70,10 +70,8 @@ class CountryFragment : Fragment() {
 
     private fun setupTitle() {
         val bottomNavigationView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
-        val actionBar = (activity as AppCompatActivity).supportActionBar!!
         countryViewModel.title.observe(viewLifecycleOwner, Observer {
             bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
-            actionBar.title = it
         })
     }
 

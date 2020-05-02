@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,9 +35,17 @@ class WorldFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_world, container, false)
         worldViewModel.load()
+        setupProgressBar()
         setupTitle()
         setupText(root.findViewById(R.id.text_world))
         return root
+    }
+
+    private fun setupProgressBar() {
+        val progressBar: ProgressBar = requireActivity().findViewById(R.id.progress_loader)
+        worldViewModel.loading.observe(viewLifecycleOwner, Observer {
+            progressBar.visibility = if(it) View.VISIBLE else View.GONE
+        })
     }
 
     private fun setupTitle() {
