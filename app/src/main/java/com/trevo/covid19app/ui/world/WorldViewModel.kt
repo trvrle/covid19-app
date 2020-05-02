@@ -1,6 +1,6 @@
 package com.trevo.covid19app.ui.world
 
-import com.trevo.covid19app.service.ApiService
+import com.trevo.covid19app.api.Api
 import com.trevo.covid19app.service.IDispatcherService
 import com.trevo.covid19app.service.PreferenceService
 import com.trevo.covid19app.ui.BaseViewModel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WorldViewModel @Inject constructor(
-    private val apiService: ApiService,
+    private val api: Api,
     private val dispatcherService: IDispatcherService,
     private val preferenceService: PreferenceService
 ) : BaseViewModel() {
@@ -29,9 +29,9 @@ class WorldViewModel @Inject constructor(
         scope.launch {
             setLoading(true)
             val summary = withContext(dispatcherService.background) {
-                apiService.getSummary()
+                api.getSummary()
             }
-            setSummary(summary)
+            setWorldwideValues(summary.worldwideSummary)
             setLoading(false)
         }
     }

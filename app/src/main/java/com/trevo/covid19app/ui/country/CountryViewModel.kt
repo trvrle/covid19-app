@@ -2,21 +2,18 @@ package com.trevo.covid19app.ui.country
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.trevo.covid19app.api.Api
 import com.trevo.covid19app.service.*
 import com.trevo.covid19app.ui.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CountryViewModel @Inject constructor(
     private val preferenceService: PreferenceService,
     private val dialogService: DialogService,
-    private val apiService: ApiService,
+    private val api: Api,
     private val dispatcherService: IDispatcherService
 ): BaseViewModel() {
 

@@ -3,9 +3,7 @@ package com.trevo.covid19app.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trevo.covid19app.api.responses.SummaryResponse
-import java.text.NumberFormat
-import java.util.*
+import com.trevo.covid19app.model.WorldwideSummary
 import javax.inject.Inject
 
 open class BaseViewModel @Inject constructor(): ViewModel() {
@@ -60,13 +58,13 @@ open class BaseViewModel @Inject constructor(): ViewModel() {
         _loading.value = isLoading
     }
 
-    protected fun setSummary(summary: SummaryResponse) {
-        _confirmedText.value = summary.Global.TotalConfirmed.toString()
-        _newConfirmedText.value = summary.Global.NewConfirmed.toString()
-        _recoveredText.value = summary.Global.TotalRecovered.toString()
-        _newRecoveredText.value = summary.Global.NewRecovered.toString()
-        _deathsText.value = summary.Global.TotalDeaths.toString()
-        _newDeathsText.value = summary.Global.NewDeaths.toString()
+    protected fun setWorldwideValues(worldwideSummary: WorldwideSummary) {
+        _confirmedText.value = worldwideSummary.confirmed
+        _newConfirmedText.value = worldwideSummary.newConfirmed
+        _recoveredText.value = worldwideSummary.recovered
+        _newRecoveredText.value = worldwideSummary.newRecovered
+        _deathsText.value = worldwideSummary.deaths
+        _newDeathsText.value = worldwideSummary.newDeaths
     }
 
     protected fun setAllTextViews(text: String) {

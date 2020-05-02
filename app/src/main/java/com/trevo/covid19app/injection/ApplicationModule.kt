@@ -7,16 +7,14 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.trevo.covid19app.api.CovidRetrofit
-import com.trevo.covid19app.service.ApiService
+import com.trevo.covid19app.api.Transformer
+import com.trevo.covid19app.api.Api
 import com.trevo.covid19app.service.DispatcherService
 import com.trevo.covid19app.service.IDispatcherService
 import dagger.Module
 import dagger.Provides
-import okhttp3.Cache
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -54,10 +52,21 @@ object ApplicationModule {
     @Provides
     @Singleton
     @JvmStatic
+    fun provideTransformer(): Transformer {
+        return Transformer()
+    }
+
+    @Provides
+    @Singleton
+    @JvmStatic
     fun provideApiService(
-        retrofit: Retrofit
-    ): ApiService {
-        return ApiService(retrofit.create(CovidRetrofit::class.java))
+        retrofit: Retrofit,
+        transformer: Transformer
+    ): Api {
+        return Api(
+            retrofit.create(CovidRetrofit::class.java),
+            transformer
+        )
     }
 
     @Provides
