@@ -17,7 +17,7 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 
-class CountryFragment : Fragment() {
+class CountryFragment : Fragment(){
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -36,11 +36,16 @@ class CountryFragment : Fragment() {
     ): View? {
         countryViewModel.load()
         val root = inflater.inflate(R.layout.fragment_country, container, false)
+        setupFragment(root)
+        return root
+    }
+
+    private fun setupFragment(root: View) {
         setupSelectCountryDialog()
         setupButton(root)
         setupProgressBar()
         setupTitle(root)
-        return root
+        setupStats()
     }
 
     private fun setupSelectCountryDialog() {
@@ -70,6 +75,33 @@ class CountryFragment : Fragment() {
         countryViewModel.title.observe(viewLifecycleOwner, Observer {
             bottomNavigationView.menu.findItem(R.id.navigation_country).title = it
             selectCountryButton.text = it
+        })
+    }
+
+    private fun setupStats() {
+        val confirmedTextView: TextView = requireActivity().findViewById(R.id.confirmed_text)
+        countryViewModel.confirmedText.observe(viewLifecycleOwner, Observer {
+            confirmedTextView.text = it
+        })
+        val newConfirmedTextView: TextView = requireActivity().findViewById(R.id.new_confirmed_text)
+        countryViewModel.newConfirmedText.observe(viewLifecycleOwner, Observer {
+            newConfirmedTextView.text = it
+        })
+        val recoveredTextView: TextView = requireActivity().findViewById(R.id.recovered_text)
+        countryViewModel.recoveredText.observe(viewLifecycleOwner, Observer {
+            recoveredTextView.text = it
+        })
+        val newRecoveredTextView: TextView = requireActivity().findViewById(R.id.new_recovered_text)
+        countryViewModel.newRecoveredText.observe(viewLifecycleOwner, Observer {
+            newRecoveredTextView.text = it
+        })
+        val deathsTextView: TextView = requireActivity().findViewById(R.id.deaths_text)
+        countryViewModel.deathsText.observe(viewLifecycleOwner, Observer {
+            deathsTextView.text = it
+        })
+        val newDeathsTextView: TextView = requireActivity().findViewById(R.id.new_deaths_text)
+        countryViewModel.newDeathsText.observe(viewLifecycleOwner, Observer {
+            newDeathsTextView.text = it
         })
     }
 }

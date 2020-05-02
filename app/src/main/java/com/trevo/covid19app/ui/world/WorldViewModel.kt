@@ -1,7 +1,5 @@
 package com.trevo.covid19app.ui.world
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.trevo.covid19app.service.ApiService
 import com.trevo.covid19app.service.IDispatcherService
 import com.trevo.covid19app.service.PreferenceService
@@ -22,6 +20,7 @@ class WorldViewModel @Inject constructor(
 
     fun load() {
         val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
+        setAllTextViews("-")
         setTitle(countryName)
         displayCasesForWorld()
     }
@@ -29,9 +28,10 @@ class WorldViewModel @Inject constructor(
     private fun displayCasesForWorld() {
         scope.launch {
             setLoading(true)
-//            val summary = withContext(dispatcherService.background) {
-//                apiService.getSummary()
-//            }
+            val summary = withContext(dispatcherService.background) {
+                apiService.getSummary()
+            }
+            setSummary(summary)
             setLoading(false)
         }
     }

@@ -52,6 +52,7 @@ class CountryViewModel @Inject constructor(
     private fun displayCasesForCountry(countryName: String) {
         scope.launch {
             setLoading(true)
+            setAllTextViews("-")
 //            val countryCasesResponses = withContext(dispatcherService.background) {
 //                apiService.getCountryTotal(countryName)
 //            }
