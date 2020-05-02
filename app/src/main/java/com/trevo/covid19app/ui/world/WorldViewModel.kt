@@ -1,24 +1,38 @@
 package com.trevo.covid19app.ui.world
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.trevo.covid19app.R
+import com.trevo.covid19app.api.Api
+import com.trevo.covid19app.service.IDispatcherService
 import com.trevo.covid19app.service.PreferenceService
+import com.trevo.covid19app.ui.BaseViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WorldViewModel @Inject constructor(
+    private val api: Api,
+    private val dispatcherService: IDispatcherService,
     private val preferenceService: PreferenceService
-) : ViewModel() {
+) : BaseViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "World Page"
+    private val scope = CoroutineScope(dispatcherService.main + SupervisorJob())
+
+    fun load() {
+        val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
+        setAllTextViews("-")
+        setTitle(countryName)
+        displayCasesForWorld()
     }
-    val text: LiveData<String> = _text
 
-    fun load(bottomNavigationView: BottomNavigationView) {
-        val countryName = preferenceService.getPref("Country", "Country")
-        bottomNavigationView.menu.findItem(R.id.navigation_country).title = countryName
+    private fun displayCasesForWorld() {
+        scope.launch {
+            setLoading(true)
+            val summary = withContext(dispatcherService.background) {
+                api.getSummary()
+            }
+            setWorldwideValues(summary.worldwideSummary)
+            setLoading(false)
+        }
     }
 }
