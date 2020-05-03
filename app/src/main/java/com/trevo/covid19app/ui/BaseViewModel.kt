@@ -3,6 +3,7 @@ package com.trevo.covid19app.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.trevo.covid19app.model.CountrySummary
 import com.trevo.covid19app.model.WorldwideSummary
 import javax.inject.Inject
 
@@ -65,6 +66,15 @@ open class BaseViewModel @Inject constructor(): ViewModel() {
         _newRecoveredText.value = worldwideSummary.newRecovered
         _deathsText.value = worldwideSummary.deaths
         _newDeathsText.value = worldwideSummary.newDeaths
+    }
+
+    protected fun setCountryValues(countrySummary: CountrySummary) {
+        _confirmedText.value = countrySummary.confirmed
+        _newConfirmedText.value = countrySummary.newConfirmed
+        _recoveredText.value = countrySummary.recovered
+        _newRecoveredText.value = countrySummary.newRecovered
+        _deathsText.value = countrySummary.deaths
+        _newDeathsText.value = countrySummary.newDeaths
     }
 
     protected fun setAllTextViews(text: String) {

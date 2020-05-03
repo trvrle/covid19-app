@@ -8,6 +8,7 @@ import com.trevo.covid19app.ui.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CountryViewModel @Inject constructor(
@@ -22,17 +23,26 @@ class CountryViewModel @Inject constructor(
     fun load() {
         val countryName = preferenceService.getPref("Country", defaultCountryValue)!!
         setTitle(countryName)
+        setAllTextViews("-")
         if (countryName != defaultCountryValue)
             displayCasesForCountry(countryName)
     }
 
-    fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder, countries: List<String>) {
-        dialogService.setupSelectCountryDialog(
-            dialogBuilder,
-            DialogInterface.OnClickListener { _, _ ->
-                applyCountry(countries, dialogService.selectedItem)
+    fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder) {
+        scope.launch {
+            setLoading(true)
+            val countries = withContext(dispatcherService.background) {
+                api.getCountryNamesAlphabetical()
             }
-        )
+            dialogService.setupSelectCountryDialog(
+                dialogBuilder,
+                countries.toTypedArray(),
+                DialogInterface.OnClickListener { _, _ ->
+                    applyCountry(countries, dialogService.selectedItem)
+                }
+            )
+            setLoading(false)
+        }
     }
 
     fun showSelectCountryDialog() {
@@ -40,20 +50,23 @@ class CountryViewModel @Inject constructor(
     }
 
     private fun applyCountry(countries: List<String>, selectedCountry: Int) {
+        if (selectedCountry < 0) return
         val countryName = countries[selectedCountry]
-        setTitle(countryName)
         preferenceService.savePreference("Country", countryName)
+        setTitle(countryName)
+        setAllTextViews("-")
         displayCasesForCountry(countryName)
     }
 
     private fun displayCasesForCountry(countryName: String) {
         scope.launch {
             setLoading(true)
-            setAllTextViews("-")
-//            val countryCasesResponses = withContext(dispatcherService.background) {
-//                apiService.getCountryTotal(countryName)
-//            }
-//            val confirmedCases = countryCasesResponses.last().Cases
+            val summary = withContext(dispatcherService.background) {
+                api.getSummary()
+            }
+            val countrySummary = summary.countrySummaries.find { it.countryName == countryName }
+            if (countrySummary != null)
+                setCountryValues(countrySummary)
             setLoading(false)
         }
     }

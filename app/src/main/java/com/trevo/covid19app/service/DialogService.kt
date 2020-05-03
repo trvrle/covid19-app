@@ -11,10 +11,11 @@ class DialogService @Inject constructor() {
     private var dialog: AlertDialog.Builder? = null
 
     fun setupSelectCountryDialog(dialogBuilder: AlertDialog.Builder,
+                                 countries: Array<String>,
                                  listener: DialogInterface.OnClickListener) {
         dialog = dialogBuilder
             .setTitle(R.string.select_country)
-            .setSingleChoiceItems(R.array.countries, -1) { _, which ->
+            .setSingleChoiceItems(countries, -1) { _, which ->
                 selectedItem = which
             }
             .setPositiveButton(R.string.select, listener)

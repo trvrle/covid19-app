@@ -49,10 +49,8 @@ class CountryFragment : Fragment(){
     }
 
     private fun setupSelectCountryDialog() {
-        val countries = resources.getStringArray(R.array.countries).toList()
         val dialogBuilder = AlertDialog.Builder(context)
-
-        countryViewModel.setupSelectCountryDialog(dialogBuilder, countries)
+        countryViewModel.setupSelectCountryDialog(dialogBuilder)
     }
 
     private fun setupButton(root: View) {
